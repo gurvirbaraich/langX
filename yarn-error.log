@@ -1,0 +1,41 @@
+Arguments: 
+  /Users/gurvirsingh/.nvm/versions/node/v18.13.0/bin/node /usr/local/bin/yarn start
+
+PATH: 
+  /Users/gurvirsingh/.nvm/versions/node/v18.13.0/bin:/Users/gurvirsingh/.composer/vendor/bin:/opt/homebrew/bin:/opt/homebrew/opt/php@8.0/sbin:/opt/homebrew/opt/php@8.0/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
+
+Yarn version: 
+  1.22.19
+
+Node version: 
+  18.13.0
+
+Platform: 
+  darwin arm64
+
+Trace: 
+  SyntaxError: /Users/gurvirsingh/Desktop/langX/package.json: Unexpected token } in JSON at position 123
+      at JSON.parse (<anonymous>)
+      at /usr/local/lib/node_modules/yarn/lib/cli.js:1629:59
+      at Generator.next (<anonymous>)
+      at step (/usr/local/lib/node_modules/yarn/lib/cli.js:310:30)
+      at /usr/local/lib/node_modules/yarn/lib/cli.js:321:13
+
+npm manifest: 
+  {
+    "name": "langX",
+    "version": "1.0.0",
+    "type": "module",
+    "main": "index.ts",
+    "scripts": {
+      "start": "node",
+    },
+    "license": "MIT",
+    "private": true
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
