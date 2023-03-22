@@ -22,6 +22,7 @@ The language uses a different syntax than other popular languages.
 
 ## Examples
 
+
 > Example of variable declaration and usage. 
 ```rust
 let num = 10
@@ -30,6 +31,7 @@ print("The value of num is " + num)
 
 - This example demonstrates how to declare a variable and print its value. The let keyword is used to declare a variable called num and assign it the value 10. The print function is used to output the value of the variable num to the console.
 
+&nbsp;
 > Example of using negative numbers.
 ```rust
 let a = 10
@@ -39,6 +41,8 @@ print("The sum of " + a + " and " + b + " is " + c)
 ```
 - The code declares two variables, a and b, with values of 10 and -5 respectively. It then adds the two variables together and stores the result in a third variable, c. The code then prints out a message that displays the sum of a and b, which is 5.
 
+
+&nbsp;
 > Example of object creation and usage.
 ```rust
 let person = {
@@ -53,6 +57,8 @@ print("City: " + person.city)
 ```
 - This example showcases the creation and usage of an object person that contains three properties name, age, and city. The object is defined using the curly braces syntax with the property names and values separated by colons. The values of the properties can be accessed using the dot notation objectName.propertyName.
 
+
+&nbsp;
 > Example of function declaration and usage.
 ```rust
 fn square(x) {
@@ -66,6 +72,8 @@ print("The square of " + num + " is " + result)
 
 - This example showcases the declaration and usage of a simple function square that takes in a single argument x and returns its square. The function is defined using the fn keyword and then called with a number argument num. The returned value from the function is stored in a variable result and then printed using the print function. 
 
+
+&nbsp;
 > Example of nested functions and closures.
 ```rust
 fn outerFunc(x) {
@@ -86,7 +94,7 @@ print("The result is " + result)
 - The closure is assigned to the variable closure. When closure is called and passed the argument 5, it adds 5 to the remembered value of x (which is 10) and returns the result 15.
 
 
-
+&nbsp;
 > Example of using local and global scopes.
 ```rust
 final let a = 5
