@@ -11,9 +11,9 @@ export default class Lexer {
 
 	private keywords: Record<string, TokenKind> = {
 		fn: TokenKind.Fn,
-		mut: TokenKind.Mut,
+		let: TokenKind.Mut,
 		final: TokenKind.Final,
-		return: TokenKind.Return
+		return: TokenKind.Return,
 	};
 
 	private getNextCharacter() {
@@ -107,7 +107,7 @@ export default class Lexer {
 			"Y",
 			"Z",
 			"_",
-			"$"
+			"$",
 		];
 
 		if (typeof character === "undefined") return false;
@@ -167,14 +167,16 @@ export default class Lexer {
 						value: currentCharacter,
 						type: TokenKind.Comma,
 					});
-				} else if (currentCharacter === "." && !this.inQuotes) {
+				} else if (currentCharacter === "." && !this.isInt(this.buffer[this.position]) && !this.inQuotes) {
 					this.tokens.push({
 						value: currentCharacter,
 						type: TokenKind.Dot,
 					});
 				} else if (
 					currentCharacter === "+" ||
-					(currentCharacter === "-" && (!this.inQuotes && !this.isInt(this.buffer[this.position]))) ||
+					(currentCharacter === "-" &&
+						!this.inQuotes &&
+						!this.isInt(this.buffer[this.position])) ||
 					currentCharacter === "*" ||
 					currentCharacter === "/" ||
 					currentCharacter === "%"
@@ -192,8 +194,8 @@ export default class Lexer {
 					this.inQuotes = true;
 				} else {
 					if (
-						this.isInt(currentCharacter) ||
-						(currentCharacter === "." && !this.inQuotes)
+						(this.isInt(currentCharacter) || currentCharacter === ".") &&
+						!this.inQuotes
 					) {
 						currentWord += currentCharacter;
 
@@ -204,47 +206,40 @@ export default class Lexer {
 						) {
 							this.tokens.push({
 								value: currentWord,
-								type: this.inQuotes ? TokenKind.String : TokenKind.Number,
+								type: TokenKind.Number,
 							});
 
 							currentWord = "";
 						}
 					} else {
-						if (currentCharacter === "-")  {
+						if (currentCharacter === "-") {
 							if (this.inQuotes) {
 								currentWord += currentCharacter;
-							}
-
-							else if (this.isInt(this.buffer[this.position])) {
+							} else if (this.isInt(this.buffer[this.position])) {
 								if (currentWord.includes("-")) {
 									console.error("Uncaught Syntax Error: Unexpected '-'");
-									exit(1)
+									exit(1);
 								}
 
 								currentWord += currentCharacter;
-								currentWord += this.buffer[this.position++]
-							}
-
-							else {
+								currentWord += this.buffer[this.position++];
+							} else {
 								console.error("Uncaught Syntax Error: Unexpected '-'");
 								exit(1);
 							}
-						}
+						} else currentWord = currentCharacter;
 
-						else
-							currentWord += currentCharacter
-
-						
 						while (true) {
 							const nextCharacter = this.buffer[this.position];
+
+							if (nextCharacter === undefined || nextCharacter === '"') break;
+
 							if (!this.inQuotes) {
 								if (this.isSkipable(nextCharacter)) break;
 								if (!this.isAlpha(nextCharacter)) break;
 							}
 
-							if (nextCharacter === undefined || nextCharacter === '"') break;
-							else currentWord += nextCharacter;
-
+							currentWord += nextCharacter;
 							this.position++;
 						}
 
@@ -257,8 +252,8 @@ export default class Lexer {
 							currentWord = "";
 						} else {
 							if (this.inQuotes) {
-								// console.log(this.inQuotes, currentWord)
 								this.inQuotes = false;
+
 								this.position++;
 
 								this.tokens.push({
@@ -268,7 +263,9 @@ export default class Lexer {
 							} else
 								this.tokens.push({
 									value: currentWord,
-								 	type: currentWord.includes("-") ? TokenKind.Number : TokenKind.Identifier,
+									type: currentWord.includes("-")
+										? TokenKind.Number
+										: TokenKind.Identifier,
 								});
 
 							currentWord = "";

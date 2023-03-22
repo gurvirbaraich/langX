@@ -1,6 +1,7 @@
 import { exit } from "process";
 import { TokenKind } from "../enums";
 import {
+	ArrayLiteral,
 	AssignmentExpression,
 	AssignmentLiteral,
 	BinaryExpression,
@@ -381,7 +382,7 @@ export default class AST {
 
 			case TokenKind.String: {
 				return <StringicLiteral>{
-					value: eval(`'${token.value}'`),
+					value: token.value,
 					kind: "stringicLiteral",
 				};
 			}
@@ -415,6 +416,25 @@ export default class AST {
 				}
 
 				return value;
+			}
+
+			case TokenKind.OpenBracket: {
+				let value: Node[] = new Array<Node>();
+
+				while (!this.EOF() && this.returnCurrentToken().type !== TokenKind.CloseBracket) {
+					value.push(this.parse_expression());
+
+					if (this.returnCurrentToken().type !== TokenKind.CloseBracket) {
+						this.expect(this.shiftCurrentToken().type, TokenKind.Comma);
+					}
+				}
+
+				this.expect(this.shiftCurrentToken().type, TokenKind.CloseBracket);
+
+				return <ArrayLiteral>{
+					values: value,
+					kind: "arrayLiteral"
+				};
 			}
 
 			case TokenKind.EOF: {

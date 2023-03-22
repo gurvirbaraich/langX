@@ -1,5 +1,7 @@
 import { exit } from "process";
 import {
+	ArrayLiteral,
+	ArrayValue,
 	AssignmentExpression,
 	BinaryExpression,
 	CallExpression,
@@ -16,7 +18,7 @@ import {
 	RuntimeValue,
 	StringValue,
 } from "../interfaces";
-import { MK_NULL, MK_STRING } from "../macros";
+import { MK_NULL } from "../macros";
 import Environment from "./enviroment";
 
 export class Interpreter {
@@ -59,6 +61,8 @@ export class Interpreter {
 			case "assignmentExpression": {
 				node.value = this.evaluate(<Node>node.value, scope);
 				scope.assign(<Node>node);
+
+
 				return MK_NULL();
 			}
 
@@ -84,6 +88,10 @@ export class Interpreter {
 				return this.evaluate_member_expression(<MemberExpression>node, scope);
 			}
 
+			case "arrayLiteral": {
+				return this.evaluate_array_literal(<ArrayLiteral>node, scope);
+			}
+
 			default: {
 				console.error(
 					"This node has not yet been setup for interpretation.",
@@ -91,6 +99,19 @@ export class Interpreter {
 				);
 			}
 		}
+	}
+
+	private static evaluate_array_literal(node: ArrayLiteral, scope: Environment): RuntimeValue {
+		const values: RuntimeValue[] = [];
+
+		for (const stmt of node.values) {
+			values.push(this.evaluate(stmt, scope));
+		}
+
+		return <ArrayValue>{
+			type: "array",
+			values: values
+		};
 	}
 
 	private static evaluate_member_expression(node: MemberExpression, scope: Environment): RuntimeValue {
@@ -204,7 +225,9 @@ export class Interpreter {
 
 		if (fn.type === "function") {
 			const func = <FunctionValue>fn;
-			const env = new Environment(func.environment);
+			let env = new Environment;
+
+			env = new Environment(func.environment);
 
 			for (let i = 0; i < func.parameters.length; i++) {
 				env.assign(<AssignmentExpression>{
@@ -219,7 +242,7 @@ export class Interpreter {
 
 			for (const stmt of func.body) {
 				// if (stmt.kind === "functionDeclaration") {
-				// 	scope.assign(<AssignmentExpression>{
+				// 	func.environment.assign(<AssignmentExpression>{
 				// 		value: stmt,
 				// 		constant: false,
 				// 		kind: "assignmentExpression",
@@ -229,7 +252,7 @@ export class Interpreter {
 
 				result = this.evaluate(stmt, env);
 			}
-
+			
 			return result;
 		}
 
@@ -243,7 +266,7 @@ export class Interpreter {
 			name: node.name,
 			type: "function",
 			parameters: node.parameters,
-			environment: this.environment,
+			environment: scope,
 		};
 
 		scope.assign(<AssignmentExpression>{

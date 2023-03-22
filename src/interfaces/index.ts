@@ -22,6 +22,7 @@ export interface Node {
 		| "assignmentExpression"
 		| "objectLiteral"
 		| "propertyLiteral"
+		| "arrayLiteral"
 		| "memberExpression"
 		| "callExpression"
 		| "functionDeclaration"
@@ -100,11 +101,16 @@ export interface FunctionDeclaration extends Node {
 	kind: "functionDeclaration";
 }
 
+export interface ArrayLiteral extends Node {
+	values: Node[];
+	kind: "arrayLiteral";
+}
+
 /**
  * Runtime Values
  */
 export interface RuntimeValue {
-	type: "number" | "string" | "null" | "boolean" | "object" | "native-fn" | "function"; 
+	type: "number" | "string" | "null" | "boolean" | "object" | "native-fn" | "array" | "function"; 
 	value: string | number | null | true | false | Map<string, RuntimeValue>;
 }
 
@@ -146,4 +152,9 @@ export interface FunctionValue extends RuntimeValue {
 	type: "function";
 	parameters: string[];
 	environment: Environment;
+}
+
+export interface ArrayValue extends RuntimeValue {
+	type: "array";
+	values: RuntimeValue[];
 }
