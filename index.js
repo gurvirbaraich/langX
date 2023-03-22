@@ -17,7 +17,7 @@ if (process.argv.length === 2) {
 	main.default({ readline });
 } else if (process.argv.length >= 3) {
 	const file = process.argv[2];
-	const extension = file.split("").reverse().join("").split(".")[0];
+	const extension = file.split("").reverse().join("").split(".")[0].split("").reverse().join("");
 
 	if (extension !== "lx") {
 		console.error(`.${extension} wasn't recognized. Use '.lx' instead.`);

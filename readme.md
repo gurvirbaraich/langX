@@ -8,7 +8,7 @@ To install langX, follow these steps:
 
 1. Clone the repository: `git clone https://github.com/gurvirbaraich/langX.git`
 2. Install dependencies: `yarn`
-3. Run langX: `yarn dev <filename>`
+3. Run langX: `yarn dev test/index.lx`
 
 ## Syntax
 
